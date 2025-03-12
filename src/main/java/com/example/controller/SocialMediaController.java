@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class SocialMediaController {
     private AccountService accountService;
     private MessageService messageService;
 
+    @Autowired
     public SocialMediaController(AccountService accountService, MessageService messageService) {
         this.accountService = accountService;
         this.messageService = messageService;
@@ -54,14 +56,17 @@ public class SocialMediaController {
         }
     }
 
-    // @RequestMapping(value = "/messages", method = RequestMethod.POST)
-    // public @ResponseBody ResponseEntity<Message> postMessage(@RequestBody Message newMessage) {
-    //     Message postedMessage = messageService.postMessage(newMessage);
-    //     if (postedMessage != null) {
-    //         return ResponseEntity.status(HttpStatus.OK).body(postedMessage);
-    //     }
-    //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(postedMessage);
-    // }
+    @RequestMapping(value = "/messages", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<?> postMessage(@RequestBody Message newMessage) {
+        try {
+            Message postedMessage = messageService.postMessage(newMessage);
+            return ResponseEntity.status(HttpStatus.OK).body(postedMessage);
+        } catch (InvalidMessageException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid message length.");
+        } catch (InvalidPosterException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poster with this accountId does not exist.");
+        }
+    }
 
     // @RequestMapping(value = "/messages", method = RequestMethod.GET)
     // public @ResponseBody ResponseEntity<List<Message>> getMessages() {
