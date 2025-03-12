@@ -68,11 +68,11 @@ public class SocialMediaController {
         }
     }
 
-    // @RequestMapping(value = "/messages", method = RequestMethod.GET)
-    // public @ResponseBody ResponseEntity<List<Message>> getMessages() {
-    //     List<Message> messageList = messageService.getMessages();
-    //     return ResponseEntity.status(HttpStatus.OK).body(messageList);
-    // }
+    @RequestMapping(value = "/messages", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<List<Message>> getMessages() {
+        List<Message> messageList = messageService.getMessages();
+        return ResponseEntity.status(HttpStatus.OK).body(messageList);
+    }
 
     // @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.GET)
     // public @ResponseBody ResponseEntity<Message> getMessageById(@PathVariable Long messageId) {
