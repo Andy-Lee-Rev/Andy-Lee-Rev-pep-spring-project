@@ -44,14 +44,15 @@ public class SocialMediaController {
 
     }
 
-    // @RequestMapping(value = "/login", method = RequestMethod.POST)
-    // public @ResponseBody ResponseEntity<Account> login(@RequestBody Account account) {
-    //     Account existsAccount = accountService.login(account);
-    //     if (existsAccount != null) {
-    //         return ResponseEntity.status(HttpStatus.OK).body(existsAccount);
-    //     }
-    //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(existsAccount);
-    // }
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<?> login(@RequestBody Account account) {
+        try {
+            Account existsAccount = accountService.login(account);
+            return ResponseEntity.status(HttpStatus.OK).body(existsAccount);
+        } catch (InvalidCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials.");
+        }
+    }
 
     // @RequestMapping(value = "/messages", method = RequestMethod.POST)
     // public @ResponseBody ResponseEntity<Message> postMessage(@RequestBody Message newMessage) {

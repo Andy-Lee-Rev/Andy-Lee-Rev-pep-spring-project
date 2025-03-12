@@ -26,4 +26,15 @@ public class AccountService {
 
         return accountRepository.save(newAccount);
     }
+
+    public Account login(Account account) {
+        Boolean existsAccount = accountRepository.existsByUsername(account.getUsername());
+        if (existsAccount) {
+            Account foundAccount = accountRepository.findByUsername(account.getUsername());
+            if (foundAccount.getPassword().equals(account.getPassword())) {
+                return foundAccount;
+            }
+        }
+        throw new InvalidCredentialsException();
+    }
 }
