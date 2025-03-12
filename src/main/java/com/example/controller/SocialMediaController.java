@@ -39,11 +39,10 @@ public class SocialMediaController {
             Account registeredAccount = accountService.register(newAccount);
             return ResponseEntity.status(HttpStatus.OK).body(registeredAccount);
         } catch (DuplicateUsernameException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (InvalidCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid account details.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -52,7 +51,7 @@ public class SocialMediaController {
             Account existsAccount = accountService.login(account);
             return ResponseEntity.status(HttpStatus.OK).body(existsAccount);
         } catch (InvalidCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
@@ -62,9 +61,9 @@ public class SocialMediaController {
             Message postedMessage = messageService.postMessage(newMessage);
             return ResponseEntity.status(HttpStatus.OK).body(postedMessage);
         } catch (InvalidMessageException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid message length.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (InvalidPosterException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Poster with this accountId does not exist.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -95,13 +94,13 @@ public class SocialMediaController {
     }
 
     @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.PATCH)
-    public @ResponseBody ResponseEntity<Integer> updateMessageById(@PathVariable Integer messageId, @RequestBody Map<String, String> requestBody) {
+    public @ResponseBody ResponseEntity<?> updateMessageById(@PathVariable Integer messageId, @RequestBody Map<String, String> requestBody) {
         String newMessageText = requestBody.get("messageText");
         try {
             Integer updatedRows = messageService.updateMessageText(messageId, newMessageText);
             return ResponseEntity.status(HttpStatus.OK).body(updatedRows);
         } catch (InvalidMessageException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         
     }

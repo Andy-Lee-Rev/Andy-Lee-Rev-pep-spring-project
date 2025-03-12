@@ -23,12 +23,12 @@ public class MessageService {
 
     public Message postMessage(Message newMessage) {
         if (newMessage.getMessageText() == null || newMessage.getMessageText().trim().isEmpty()) {
-            throw new InvalidMessageException();
+            throw new InvalidMessageException("Message cannot be empty.");
         }
 
         Integer messageLen = newMessage.getMessageText().length();
         if (messageLen > 255) {
-            throw new InvalidMessageException();
+            throw new InvalidMessageException("Message exceeds 255 characters.");
         }
 
         if (!accountRepository.existsByAccountId(newMessage.getPostedBy())) {
@@ -62,15 +62,15 @@ public class MessageService {
     @Transactional
     public Integer updateMessageText(Integer messageId, String newMessageText) {
         if (newMessageText == null || newMessageText.trim().isEmpty()) {
-            throw new InvalidMessageException();
+            throw new InvalidMessageException("Message cannot be empty.");
         }
 
         if (newMessageText.length() > 255) {
-            throw new InvalidMessageException();
+            throw new InvalidMessageException("Message exceeds 255 characters.");
         }
 
         if (!messageRepository.existsByMessageId(messageId)) {
-            throw new InvalidMessageException();
+            throw new InvalidMessageException("The messageId does not exist.");
         }
 
         int updatedRows = messageRepository.updateMessageText(messageId, newMessageText);
