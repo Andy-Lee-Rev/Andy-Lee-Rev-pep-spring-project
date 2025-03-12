@@ -2,12 +2,12 @@ package com.example.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.entity.Message;
 import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 import com.example.exception.InvalidMessageException;
 import com.example.exception.InvalidPosterException;
-import java.util.Optional;
 import java.util.List;
 
 @Service
@@ -57,5 +57,23 @@ public class MessageService {
             return 1;
         }
         return 0;
+    }
+
+    @Transactional
+    public Integer updateMessageText(Integer messageId, String newMessageText) {
+        if (newMessageText == null || newMessageText.trim().isEmpty()) {
+            throw new InvalidMessageException();
+        }
+
+        if (newMessageText.length() > 255) {
+            throw new InvalidMessageException();
+        }
+
+        if (!messageRepository.existsByMessageId(messageId)) {
+            throw new InvalidMessageException();
+        }
+
+        int updatedRows = messageRepository.updateMessageText(messageId, newMessageText);
+        return updatedRows; 
     }
 }

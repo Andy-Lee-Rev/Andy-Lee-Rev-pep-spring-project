@@ -9,10 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import com.example.entity.*;
 import com.example.service.*;
 import com.example.exception.*;
@@ -89,16 +88,23 @@ public class SocialMediaController {
     @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.DELETE)
     public @ResponseBody ResponseEntity<Integer> deleteByMessageId(@PathVariable Integer messageId) {
         Integer result = messageService.deleteByMessageId(messageId);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        if (result == 1) {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    // @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.PATCH)
-    // public @ResponseBody ResponseEntity<Message> updateMessageById(@PathVariable Long messageId) {
-    //     if (messageService.updateMessageById(messageId)) {
-    //         return new ResponseEntity<>(messageService.updateMessageById(messageId), HttpStatus.OK);
-    //     }
-    //     return new ResponseEntity<>(messageService.updateMessageById(messageId), HttpStatus.BAD_REQUEST);
-    // }
+    @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.PATCH)
+    public @ResponseBody ResponseEntity<Integer> updateMessageById(@PathVariable Integer messageId, @RequestBody Map<String, String> requestBody) {
+        String newMessageText = requestBody.get("messageText");
+        try {
+            Integer updatedRows = messageService.updateMessageText(messageId, newMessageText);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedRows);
+        } catch (InvalidMessageException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        
+    }
 
     // @RequestMapping(value = "/accounts/{accountId}/messages", method = RequestMethod.GET)
     // public @ResponseBody Message getMessagesByAccountId(@PathVariable Long accountId) {
