@@ -76,4 +76,8 @@ public class MessageService {
         int updatedRows = messageRepository.updateMessageText(messageId, newMessageText);
         return updatedRows; 
     }
+
+    public List<Message> getMessagesByAccountId(Integer accountId) {
+        return messageRepository.findAllByPostedBy(accountId);
+    }
 }

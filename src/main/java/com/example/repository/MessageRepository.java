@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.example.entity.Message;
+import java.util.List;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
@@ -16,4 +17,6 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Modifying
     @Query("UPDATE Message m SET m.messageText = :messageText WHERE m.messageId = :messageId")
     int updateMessageText(@Param("messageId") Integer messageId, @Param("messageText") String messageText);
+
+    List<Message> findAllByPostedBy(Integer accountId);
 }
