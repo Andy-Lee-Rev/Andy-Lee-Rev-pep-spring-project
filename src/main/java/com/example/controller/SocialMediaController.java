@@ -77,17 +77,20 @@ public class SocialMediaController {
 
     @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.GET)
     public @ResponseBody ResponseEntity<?> getMessageById(@PathVariable Integer messageId) {
-        Optional<Message> message = messageService.getMessageById(messageId);
-        if (message.isPresent()) {
+        try {
+            Message message = messageService.getMessageById(messageId);
             return ResponseEntity.status(HttpStatus.OK).body(message);
+        } catch (InvalidMessageException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    // @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.DELETE)
-    // public @ResponseBody Message deleteMessageById(@PathVariable Long messageId) {
-    //     return new ResponseEntity<>(messageService.deleteMessageById(messageId), HttpStatus.OK);
-    // }
+    // Always OK, return 1 or null upon deletion or no deletion.
+    @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseEntity<Integer> deleteByMessageId(@PathVariable Integer messageId) {
+        Integer result = messageService.deleteByMessageId(messageId);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
 
     // @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.PATCH)
     // public @ResponseBody ResponseEntity<Message> updateMessageById(@PathVariable Long messageId) {

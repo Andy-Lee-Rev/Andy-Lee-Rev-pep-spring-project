@@ -42,7 +42,20 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
-    public Optional<Message> getMessageById(Integer messageId) {
-        return messageRepository.findByMessageId(messageId);
+    public Message getMessageById(Integer messageId) {
+        boolean existMessage = messageRepository.existsByMessageId(messageId);
+        if (existMessage) {
+            return messageRepository.findByMessageId(messageId);
+        }
+        throw new InvalidMessageException();
+    }
+
+    public Integer deleteByMessageId(Integer messageId) {
+        if (messageRepository.existsByMessageId(messageId)) {
+            Message messageToBeDeleted = messageRepository.findByMessageId(messageId);
+            messageRepository.delete(messageToBeDeleted);
+            return 1;
+        }
+        return 0;
     }
 }

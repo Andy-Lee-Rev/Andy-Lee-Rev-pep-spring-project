@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 import com.example.entity.Message;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
-    Optional<Message> findByMessageId(Integer messageId);
+public interface MessageRepository extends JpaRepository<Message, Integer> {
+    Message findByMessageId(Integer messageId);
     boolean existsByMessageId(Integer messageId);
+
+    void deleteByMessageId(Integer messageId);
 }
