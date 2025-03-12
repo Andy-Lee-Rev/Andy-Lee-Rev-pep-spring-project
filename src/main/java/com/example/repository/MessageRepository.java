@@ -8,6 +8,6 @@ import com.example.entity.Message;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    Optional<Message> findById(Long messageId);
-    boolean existsById(Long messageId);
+    Optional<Message> findByMessageId(Integer messageId);
+    boolean existsByMessageId(Integer messageId);
 }

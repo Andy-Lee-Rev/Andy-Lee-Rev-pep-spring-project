@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 import com.example.entity.*;
 import com.example.service.*;
 import com.example.exception.*;
@@ -74,11 +75,14 @@ public class SocialMediaController {
         return ResponseEntity.status(HttpStatus.OK).body(messageList);
     }
 
-    // @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.GET)
-    // public @ResponseBody ResponseEntity<Message> getMessageById(@PathVariable Long messageId) {
-    //     Message message = messageService.getMessageById(messageId);
-    //     return ResponseEntity.status(HttpStatus.OK).body(message);
-    // }
+    @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.GET)
+    public @ResponseBody ResponseEntity<?> getMessageById(@PathVariable Integer messageId) {
+        Optional<Message> message = messageService.getMessageById(messageId);
+        if (message.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(message);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 
     // @RequestMapping(value = "/messages/{messageId}", method = RequestMethod.DELETE)
     // public @ResponseBody Message deleteMessageById(@PathVariable Long messageId) {

@@ -7,6 +7,7 @@ import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 import com.example.exception.InvalidMessageException;
 import com.example.exception.InvalidPosterException;
+import java.util.Optional;
 import java.util.List;
 
 @Service
@@ -39,5 +40,9 @@ public class MessageService {
 
     public List<Message> getMessages() {
         return messageRepository.findAll();
+    }
+
+    public Optional<Message> getMessageById(Integer messageId) {
+        return messageRepository.findByMessageId(messageId);
     }
 }
